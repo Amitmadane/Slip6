@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_FRAMES 10
+#define MAX_PAGES 15
+int main() {
+    int frames;
+    int pageReference[MAX_PAGES] = {3, 4, 5, 6, 3, 4, 7, 3, 4, 5, 6, 7, 2, 4, 6};
+    int pageFaults = 0; 
+    int pageFrames[MAX_FRAMES];
+    int front = 0;
+    printf("Enter the number of memory frames (n): ");
+    scanf("%d", &frames);
+    for (int i = 0; i < frames; i++) {
+        pageFrames[i] = -1;
+    }
+    printf("Reference String: ");
+    for (int i = 0; i < MAX_PAGES; i++) {
+        printf("%d ", pageReference[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < MAX_PAGES; i++) {
+        int currentPage = pageReference[i];
+        int pageFound = 0;
+        for (int j = 0; j < frames; j++) {
+            if (pageFrames[j] == currentPage) {
+                pageFound = 1; 
+                break;
+            }
+        }
+        if (!pageFound) {
+            pageFaults++;
+            if (pageFrames[front] == -1) {
+                pageFrames[front] = currentPage;
+            } else { 
+                pageFrames[front] = currentPage;
+            }
+            front = (front + 1) % frames;
+            printf("Page Fault! Current page frames: ");
+            for (int j = 0; j < frames; j++) {
+                printf("%d ", pageFrames[j]);
+            }
+            printf("\n");
+        } else {
+            printf("Page %d found in memory. No page fault.\n", currentPage);
+        }
+    }
+    printf("\nTotal number of page faults: %d\n", pageFaults);
+    return 0;
+}
